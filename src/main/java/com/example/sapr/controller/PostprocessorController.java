@@ -113,23 +113,23 @@ public class PostprocessorController implements Initializable {
         save(calculatorResults, ((Button) event.getSource()).getScene().getWindow());
     }
 
-    public void drawGraph(String shiftStep, int barIndex, int precision) {
-        try {
-            double parsedStep = tryParseDouble(shiftStep);
-            if (parsedStep == 0.0)  MainService.showErrorDialog("Sampling step value can't be null");
-            int stepPrecision = getNumberPrecision(shiftStep);
-            double barLength = storage.getConstructor().getBars().get(barIndex - 1).getLength();
-            Group group = graphCreator.create(calculator, barIndex - 1, precision, parsedStep, barLength, stepPrecision);
-            Scene scene = new Scene(group);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Graph");
-            stage.show();
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Internal Application Error. Try again or contact to me.", ButtonType.OK).show();
-        }
-    }
+//    public void drawGraph(String shiftStep, int barIndex, int precision) {
+//        try {
+//            double parsedStep = tryParseDouble(shiftStep);
+//            if (parsedStep == 0.0)  MainService.showErrorDialog("Sampling step value can't be null");
+//            int stepPrecision = getNumberPrecision(shiftStep);
+//            double barLength = storage.getConstructor().getBars().get(barIndex - 1).getLength();
+//            Group group = GraphCreator.create(calculator, barIndex - 1, precision, parsedStep, barLength, stepPrecision);
+//            Scene scene = new Scene(group);
+//            Stage stage = new Stage();
+//            stage.setScene(scene);
+//            stage.setTitle("Graph");
+//            stage.show();
+//        } catch (Exception e) {
+//            new Alert(Alert.AlertType.ERROR,
+//                    "Internal Application Error. Try again or contact to me.", ButtonType.OK).show();
+//        }
+//    }
     private int getNumberPrecision(String number) {
         String[] dotSplit = number.split("\\.");
         if (dotSplit.length == 1) {
