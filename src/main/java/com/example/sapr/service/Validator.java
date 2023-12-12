@@ -13,7 +13,7 @@ public class Validator {
 
     private Boolean isBarValid(Bar bar) {
         if (bar.getArea() <= 0) return false;
-        if (bar.getLenght() <= 0) return false;
+        if (bar.getLength() <= 0) return false;
         if (bar.getElasticMod() <= 0) return false;
         return bar.getPermisVolt() > 0;
     }

@@ -22,8 +22,8 @@ public class Bar {
         this.qxLoad = 0.0;
     }
 
-    public void setLenght(Double lenght) {
-        this.length = lenght;
+    public void setLength(Double length) {
+        this.length = length;
     }
 
     public void setArea(Double area) {
@@ -42,7 +42,7 @@ public class Bar {
         this.permisVolt = permisVolt;
     }
 
-    public Double getLenght() {
+    public Double getLength() {
         return length;
     }
 

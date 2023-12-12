@@ -1,72 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<HBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="900.0" spacing="15" style="-fx-background-color: rgba(128,128,128,0.19);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.sapr.controller.PreprocessorController">
+<HBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="900.0" spacing="15"
+      style="-fx-background-color: rgba(128,128,128,0.19);" xmlns:fx="http://javafx.com/fxml"
+       fx:controller="com.example.sapr.controller.PreprocessorController">
     <VBox alignment="TOP_CENTER" spacing="10">
         <Label text="Опоры:">
             <padding>
-                <Insets top="10.0" />
+                <Insets top="10.0"/>
             </padding>
         </Label>
-        <CheckBox fx:id="leftSupport" text="левая" />
-        <CheckBox fx:id="rightSupport" text="правая" />
-        <Button onMouseClicked="#draw" prefWidth="130" text="Отрисовать" />
-        <Button onMouseClicked="#save" prefWidth="130" text="Сохранить" />
-        <Button onMouseClicked="#upload" prefWidth="130" text="Загрузить" />
-        <Button onMouseClicked="#process" prefWidth="130" text="Процессор" />
-        <Button onMouseClicked="#postprocess" prefWidth="130" text="Постпроцессор" />
-        <Button fx:id="addBar" prefWidth="130" text="Добавить стежень" />
-        <Button fx:id="delBar" prefWidth="130" text="Удалить стержень" />
-        <Button fx:id="addNodeLoad" prefWidth="130" text="Добавить узел" />
-        <Button fx:id="delNodeLoad" prefWidth="130" text="Удалить узел" />
+        <CheckBox fx:id="leftSupport" text="левая"/>
+        <CheckBox fx:id="rightSupport" text="правая"/>
+        <Button onMouseClicked="#draw" prefWidth="130" text="Отрисовать"/>
+        <Button onMouseClicked="#save" prefWidth="130" text="Сохранить"/>
+        <Button onMouseClicked="#upload" prefWidth="130" text="Загрузить"/>
+        <Button onMouseClicked="#process" prefWidth="130" text="Процессор"/>
+        <Button onMouseClicked="#postprocess" prefWidth="130" text="Постпроцессор"/>
+        <Button fx:id="addBar" prefWidth="130" text="Добавить стежень"/>
+        <Button fx:id="delBar" prefWidth="130" text="Удалить стержень"/>
+        <Button fx:id="addNodeLoad" prefWidth="130" text="Добавить узел"/>
+        <Button fx:id="delNodeLoad" prefWidth="130" text="Удалить узел"/>
     </VBox>
-   <Accordion>
-     <panes>
-       <TitledPane animated="false" text="untitled 1">
-         <content>
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-         </content>
-            <graphic>
-                <HBox alignment="TOP_CENTER" spacing="10">
+    <Accordion>
+        <panes>
+            <TitledPane animated="false" text="untitled 1">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                </content>
+                <graphic>
+                    <HBox alignment="TOP_CENTER" spacing="10">
+                        <VBox alignment="TOP_CENTER" spacing="10">
+                            <Label text="Стержни"/>
+                            <TableView fx:id="barView" editable="true" minWidth="600">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="length" sortable="false" text="Длина"/>
+                                    <TableColumn fx:id="area" sortable="false" text="Площадь сечения"/>
+                                    <TableColumn fx:id="qxLoad" sortable="false" text="qx"/>
+                                    <TableColumn fx:id="elasticMod" sortable="false" text="Модуль упругости"/>
+                                    <TableColumn fx:id="permisVolt" sortable="false" text="Напряжение"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </HBox>
+                </graphic>
+            </TitledPane>
+            <TitledPane animated="false" text="untitled 2">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                </content>
+                <graphic>
                     <VBox alignment="TOP_CENTER" spacing="10">
-                        <Label text="Стержни" />
-                        <TableView fx:id="barView" editable="true" minWidth="600">
+                        <Label text="Нагрузки на узлы"/>
+                        <TableView fx:id="nodeView" editable="true" maxWidth="600.0" minWidth="100" prefHeight="400.0"
+                                   prefWidth="600.0">
                             <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                             </columnResizePolicy>
                             <columns>
-                                <TableColumn fx:id="length" sortable="false" text="Длина" />
-                                <TableColumn fx:id="area" sortable="false" text="Площадь сечения" />
-                                <TableColumn fx:id="qxLoad" sortable="false" text="qx" />
-                                <TableColumn fx:id="elasticMod" sortable="false" text="Модуль упругости" />
-                                <TableColumn fx:id="permisVolt" sortable="false" text="Напряжение" />
+                                <TableColumn fx:id="fxLoad" sortable="false" text="Fx"/>
                             </columns>
                         </TableView>
                     </VBox>
-                </HBox>
-            </graphic>
-       </TitledPane>
-       <TitledPane animated="false" text="untitled 2">
-         <content>
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-         </content>
-            <graphic>
-                 <VBox alignment="TOP_CENTER" spacing="10">
-                     <Label text="Нагрузки на узлы" />
-                     <TableView fx:id="nodeView" editable="true" maxWidth="600.0" minWidth="100" prefHeight="400.0" prefWidth="600.0">
-                         <columnResizePolicy>
-                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                         </columnResizePolicy>
-                         <columns>
-                             <TableColumn fx:id="fxLoad" sortable="false" text="Fx" />
-                         </columns>
-                     </TableView>
-                 </VBox>
-            </graphic>
-       </TitledPane>
-     </panes>
-   </Accordion>
+                </graphic>
+            </TitledPane>
+        </panes>
+    </Accordion>
 </HBox>

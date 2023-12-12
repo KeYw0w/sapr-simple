@@ -9,18 +9,25 @@ import javafx.stage.Stage;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.sapr.service.MainService.showErrorDialog;
 import static org.apache.commons.math3.linear.MatrixUtils.createRealMatrix;
 
-public class Processor {
+public enum Processor {
+    INSTANCE;
     private String NX_FORMATTER = "N%dx: (%f * x) + (%f)";
     private String SIGMA_FORMATTER = "σ%dx: (%f * x) + (%f)";
     private String UX_FORMATTER = "U%dx: (%f * x^2) + (%f * x) + (%f)";
+    public List<NxCalculate> nxTotal = new ArrayList<>();
+    public List<SigmaCalculate> sigmaTotal = new ArrayList<>();
+    public List<UXCalculate> uxTotal = new ArrayList<>();
+
     void process(Constructor construction) {
         String processedValue = calculate(construction);
-        Stage stage =new Stage();
+        Stage stage = new Stage();
         stage.setResizable(false);
         TextArea textArea = new TextArea(processedValue);
         Scene scene = new Scene(textArea, 400.0, 400.0);
@@ -33,7 +40,7 @@ public class Processor {
         int barCount = nodeCount - 1;
         List<Double> elasticMods = construction.getBars().stream().map(Bar::getElasticMod).collect(Collectors.toList());
         List<Double> areas = construction.getBars().stream().map(Bar::getArea).collect(Collectors.toList());
-        List<Double> lengths = construction.getBars().stream().map(Bar::getLenght).collect(Collectors.toList());
+        List<Double> lengths = construction.getBars().stream().map(Bar::getLength).collect(Collectors.toList());
         double[] nodeLoads = construction.getNodes().stream().mapToDouble(Node::getFxLoad).toArray();
         double[] barLoads = construction.getBars().stream().mapToDouble(Bar::getQxLoad).toArray();
         double[][] reactionVectorData = new double[nodeCount][1];
@@ -98,27 +105,53 @@ public class Processor {
             builder.append(String.format(SIGMA_FORMATTER, idx + 1, -barLoads[idx] / areas.get(idx), nxb / areas.get(idx))).append("\n");
             builder.append(String.format(NX_FORMATTER, idx + 1, -barLoads[idx], nxb)).append("\n");
             builder.append(String.format(UX_FORMATTER, idx + 1, uxa, uxb, uZeros[idx])).append("\n");
+            uxTotal.add(new UXCalculate(uxa, uxb));
+            sigmaTotal.add(new SigmaCalculate(-barLoads[idx] / areas.get(idx), nxb / areas.get(idx)));
+            nxTotal.add(new NxCalculate(-barLoads[idx], nxb));
+
         }
         return builder.toString();
 
     }
 
-    private RealMatrix createDeltaMatrix(double[][] reactionMatrixData , double[][] reactionVectorData) {
+    public Results calculate(Constructor constructor, double x) {
+        if (x < 0) {
+            showErrorDialog("Параметры конструкции заданы неверно");
+            return null;
+        }
+        double test = 0;
+        for (int i = 0; i <= constructor.getBars().size(); i++) {
+            test += constructor.getBars().get(i).getLength();
+            if (x <= test)
+                return new Results(x, sigmaTotal.get(i).calculate(x), nxTotal.get(i).calculate(x), uxTotal.get(i).calculate(x));
+        }
+        return null;
+    }
+
+    public List<Results> calculate(Constructor constructor, Integer ind, double step) {
+        List<Results> results = new ArrayList<>();
+        for (double i = 0; i <= constructor.getBars().get(ind).getLength(); i += step) {
+            results.add(new Results(i, sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
+        }
+        return results;
+    }
+
+    private RealMatrix createDeltaMatrix(double[][] reactionMatrixData, double[][] reactionVectorData) {
         RealMatrix reactionMatrix = createRealMatrix(reactionMatrixData);
-        RealMatrix reactionVector  = createRealMatrix(reactionVectorData);
+        RealMatrix reactionVector = createRealMatrix(reactionVectorData);
         RealMatrix inverseReactionMatrix = new LUDecomposition(reactionMatrix).getSolver().getInverse();
         return inverseReactionMatrix.multiply(reactionVector);
     }
 
-    private Double  calculateNxb(Double elasticMod,Double area,Double length, Double Up0,Double UpL,Double q) {
+    private Double calculateNxb(Double elasticMod, Double area, Double length, Double Up0, Double UpL, Double q) {
         return elasticMod * area / length * (UpL - Up0) + q * length / 2;
     }
 
-    private Double calculateUxb(Double E, Double A,Double L,Double Up0,Double UpL,Double q) {
+    private Double calculateUxb(Double E, Double A, Double L, Double Up0, Double UpL, Double q) {
         return (UpL - Up0 + q * L * L / (2 * E * A)) / L;
     }
 
-    private Double calculateUxa(Double E,Double A,Double q) {
+    private Double calculateUxa(Double E, Double A, Double q) {
         return -q / (2 * E * A);
     }
 }
