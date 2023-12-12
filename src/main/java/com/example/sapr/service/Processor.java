@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Precision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,10 +129,10 @@ public enum Processor {
         return null;
     }
 
-    public List<Results> calculate(Constructor constructor, Integer ind, double step) {
+    public List<Results> calculate(Constructor constructor, Integer ind, double step, int xPrecision) {
         List<Results> results = new ArrayList<>();
         for (double i = 0; i <= constructor.getBars().get(ind).getLength(); i += step) {
-            results.add(new Results(i, sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
+            results.add(new Results(Precision.round(i, xPrecision), sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
         }
         return results;
     }

@@ -1,18 +1,14 @@
 package com.example.sapr.controller;
 
-import com.example.sapr.service.MainService;
 import com.example.sapr.service.Processor;
 import com.example.sapr.service.Results;
 import com.example.sapr.service.Storage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.BufferedWriter;
@@ -40,12 +36,7 @@ public class PostprocessorController implements Initializable {
     Storage storage = Storage.INSTANCE;
 
     private double tryParseDouble(String number) {
-        try {
-            return Double.parseDouble(number);
-        } catch (Exception e) {
-            showErrorDialog("Incorrect value at TextBox");
-        }
-        return 0;
+        return Double.parseDouble(number);
     }
 
     @Override
@@ -65,17 +56,14 @@ public class PostprocessorController implements Initializable {
     }
 
     public void calculateForX() {
-        double X = tryParseDouble(x.getText());
-        Results results = processor.calculate(storage.getConstructor(), X);
-        resultsView.getItems().clear();
-        resultsView.getItems().add(results);
-    }
-
-
-    public void drawDiagram() {
-    }
-
-    public void drawGraph() {
+        try {
+            double X = tryParseDouble(x.getText());
+            Results results = processor.calculate(storage.getConstructor(), X);
+            resultsView.getItems().clear();
+            resultsView.getItems().add(results);
+        } catch (Exception e) {
+            showErrorDialog("Ошибка");
+        }
     }
 
     public void save(List<Results> Results, Window window) {
@@ -86,7 +74,7 @@ public class PostprocessorController implements Initializable {
         try (BufferedWriter writer = Files.newBufferedWriter(chosenFile.toPath())) {
             writer.write(prepareResultsForSaving(Results));
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            showErrorDialog("Не удалось сохранить файл");
         }
 
     }
@@ -105,7 +93,8 @@ public class PostprocessorController implements Initializable {
         try {
             double barindex = tryParseDouble(barIndexes.getText());
             double step = tryParseDouble(samplingStep.getText());
-            List<Results> resultsList = processor.calculate(storage.getConstructor(), (int) barindex - 1, step);
+            int stepPrecision = getNumberPrecision(samplingStep.getText());
+            List<Results> resultsList = processor.calculate(storage.getConstructor(), (int) barindex - 1, step, stepPrecision);
             resultsView.getItems().clear();
             resultsView.getItems().addAll(resultsList);
         } catch (Exception e) {
