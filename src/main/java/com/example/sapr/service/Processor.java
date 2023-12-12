@@ -27,6 +27,9 @@ public enum Processor {
     public final List<UXCalculate> uxTotal = new ArrayList<>();
 
     void process(Constructor construction) {
+        nxTotal.clear();
+        sigmaTotal.clear();
+        uxTotal.clear();
         String processedValue = calculate(construction);
         Stage stage = new Stage();
         stage.setResizable(false);
@@ -106,7 +109,7 @@ public enum Processor {
             builder.append(String.format(SIGMA_FORMATTER, idx + 1, -barLoads[idx] / areas.get(idx), nxb / areas.get(idx))).append("\n");
             builder.append(String.format(NX_FORMATTER, idx + 1, -barLoads[idx], nxb)).append("\n");
             builder.append(String.format(UX_FORMATTER, idx + 1, uxa, uxb, uZeros[idx])).append("\n");
-            uxTotal.add(new UXCalculate(uxa, uxb));
+            uxTotal.add(new UXCalculate(uxa, uxb, uZeros[idx]));
             sigmaTotal.add(new SigmaCalculate(-barLoads[idx] / areas.get(idx), nxb / areas.get(idx)));
             nxTotal.add(new NxCalculate(-barLoads[idx], nxb));
 
@@ -115,7 +118,7 @@ public enum Processor {
 
     }
 
-    public Results calculate(Constructor constructor, double x) {
+    public Result calculate(Constructor constructor, double x) {
         if (x < 0) {
             showErrorDialog("Параметры конструкции заданы неверно");
             return null;
@@ -124,15 +127,15 @@ public enum Processor {
         for (int i = 0; i <= constructor.getBars().size(); i++) {
             test += constructor.getBars().get(i).getLength();
             if (x <= test)
-                return new Results(x, sigmaTotal.get(i).calculate(x), nxTotal.get(i).calculate(x), uxTotal.get(i).calculate(x));
+                return new Result(x, sigmaTotal.get(i).calculate(x), nxTotal.get(i).calculate(x), uxTotal.get(i).calculate(x));
         }
         return null;
     }
 
-    public List<Results> calculate(Constructor constructor, Integer ind, double step, int xPrecision) {
-        List<Results> results = new ArrayList<>();
+    public List<Result> calculate(Constructor constructor, Integer ind, double step, int xPrecision) {
+        List<Result> results = new ArrayList<>();
         for (double i = 0; Precision.round(i, xPrecision) <= constructor.getBars().get(ind).getLength(); i += step) {
-            results.add(new Results(Precision.round(i, xPrecision), sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
+            results.add(new Result(Precision.round(i, xPrecision), sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
         }
         return results;
     }

@@ -1,12 +1,12 @@
 package com.example.sapr.service;
 
-public class Results {
+public class Result {
     private double x;
     private double sigma;
     private double NX;
     private double UX;
 
-    public Results(double x, double sigma, double NX, double UX) {
+    public Result(double x, double sigma, double NX, double UX) {
         this.x = x;
         this.sigma = sigma;
         this.NX = NX;

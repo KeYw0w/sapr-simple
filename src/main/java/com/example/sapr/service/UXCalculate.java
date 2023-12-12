@@ -12,8 +12,9 @@ public class UXCalculate {
         return Precision.round((firstArg * x * x) + (secondArg * x) + thirdArg, 4);
     }
 
-    public UXCalculate(double firstArg, double secondArg) {
+    public UXCalculate(double firstArg, double secondArg, double thirdArg) {
         this.firstArg = firstArg;
         this.secondArg = secondArg;
+        this.thirdArg = thirdArg;
     }
 }
