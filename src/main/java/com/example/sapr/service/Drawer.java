@@ -87,7 +87,7 @@ public class Drawer {
 
     private Rectangle createSupport(Double x, Double height) {
         var rectangle = new Rectangle(x, height / 2 - SUPPORT_HEIGHT / 2, SUPPORT_WIDTH, SUPPORT_HEIGHT);
-        rectangle.setFill(SUPPORT_COLOR);
+        rectangle.setFill(Color.rgb(53,89,119,0.4));
         return rectangle;
     }
 
@@ -106,6 +106,11 @@ public class Drawer {
         if (barArea < MIN_BAR_AREA) {
             barArea = MIN_BAR_AREA;
         }
-        return new Rectangle(x, height / 2 - barArea / 2, barLength, barArea);
+        Rectangle Bar= new Rectangle(x, height / 2 - barArea / 2, barLength, barArea);
+        Bar.setArcHeight(20.0d);
+        Bar.setArcWidth(20.0d);
+        Bar.setFill(Color.TRANSPARENT);
+        Bar.setStroke(Color.BLACK);
+        return Bar;
     }
 }

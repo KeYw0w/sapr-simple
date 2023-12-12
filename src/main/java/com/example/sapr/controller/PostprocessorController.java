@@ -102,18 +102,23 @@ public class PostprocessorController implements Initializable {
     }
 
     public void calculate() {
-        double barindex = tryParseDouble(barIndexes.getText());
-        double step = tryParseDouble(samplingStep.getText());
-        List<Results> resultsList = processor.calculate(storage.getConstructor(), (int) barindex - 1, step);
-        resultsView.getItems().clear();
-        resultsView.getItems().addAll(resultsList);
+        try {
+            double barindex = tryParseDouble(barIndexes.getText());
+            double step = tryParseDouble(samplingStep.getText());
+            List<Results> resultsList = processor.calculate(storage.getConstructor(), (int) barindex - 1, step);
+            resultsView.getItems().clear();
+            resultsView.getItems().addAll(resultsList);
+        } catch (Exception e) {
+            showErrorDialog("Ошибка");
+        }
     }
+
     public void save(MouseEvent event) {
         List<Results> calculatorResults = resultsView.getItems();
         save(calculatorResults, ((Button) event.getSource()).getScene().getWindow());
     }
 
-//    public void drawGraph(String shiftStep, int barIndex, int precision) {
+    //    public void drawGraph(String shiftStep, int barIndex, int precision) {
 //        try {
 //            double parsedStep = tryParseDouble(shiftStep);
 //            if (parsedStep == 0.0)  MainService.showErrorDialog("Sampling step value can't be null");

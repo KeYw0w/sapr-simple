@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" minHeight="625" minWidth="440" spacing="10"  xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.sapr.controller.PostprocessorController">
+<VBox alignment="CENTER" minHeight="625" minWidth="440" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sapr.controller.PostprocessorController">
     <Label text="Результаты расчета" />
     <TableView fx:id="resultsView" maxWidth="400">
         <columnResizePolicy>
@@ -20,7 +20,7 @@
         <VBox spacing="10">
             <HBox alignment="CENTER_LEFT" spacing="5">
                 <Label text="Номер стержня: " />
-                <TextField fx:id="barIndexes" />
+                <TextField fx:id="barIndexes" prefHeight="31.0" prefWidth="58.0" />
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="5" />
             <HBox alignment="CENTER_LEFT" spacing="5">
@@ -34,8 +34,8 @@
             </HBox>
             <Button onMouseClicked="#calculate" text="Провести расчеты" />
         </VBox>
-        <VBox alignment="CENTER" spacing="10">
-            <Button onMouseClicked="#drawGraph" prefWidth="140" text="Отрисовать графики" />
+        <VBox alignment="CENTER" prefWidth="150.0" spacing="10">
+            <Button onMouseClicked="#drawGraph" prefHeight="29.0" prefWidth="135.0" text="Графики" />
 <!--            <Button onMouseClicked="#drawDiagram" prefWidth="140" text="Отрисовать эпюры" />-->
             <Button onMouseClicked="#save" text="Сохранить" />
         </VBox>
