@@ -37,7 +37,7 @@ public class Drawer {
         for (int i = 0; i < construction.getBars().size(); i++) {
             var bar = createBar(x, construction.getBars().get(i), oneBarLength, height);
             group.getChildren().add(bar);
-            var nodeLoad = createNodeLoad(x, construction.getNodes().get(construction.getNodes().size() - 1), height);
+            var nodeLoad = createNodeLoad(x, construction.getNodes().get(i), height);
             if (nodeLoad != null) {
                 group.getChildren().add(nodeLoad);
             }
