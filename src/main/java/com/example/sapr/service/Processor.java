@@ -22,9 +22,9 @@ public enum Processor {
     private String NX_FORMATTER = "N%dx: (%f * x) + (%f)";
     private String SIGMA_FORMATTER = "σ%dx: (%f * x) + (%f)";
     private String UX_FORMATTER = "U%dx: (%f * x^2) + (%f * x) + (%f)";
-    public List<NxCalculate> nxTotal = new ArrayList<>();
-    public List<SigmaCalculate> sigmaTotal = new ArrayList<>();
-    public List<UXCalculate> uxTotal = new ArrayList<>();
+    public final List<NxCalculate> nxTotal = new ArrayList<>();
+    public final List<SigmaCalculate> sigmaTotal = new ArrayList<>();
+    public final List<UXCalculate> uxTotal = new ArrayList<>();
 
     void process(Constructor construction) {
         String processedValue = calculate(construction);
@@ -131,7 +131,7 @@ public enum Processor {
 
     public List<Results> calculate(Constructor constructor, Integer ind, double step, int xPrecision) {
         List<Results> results = new ArrayList<>();
-        for (double i = 0; i <= constructor.getBars().get(ind).getLength(); i += step) {
+        for (double i = 0; Precision.round(i, xPrecision) <= constructor.getBars().get(ind).getLength(); i += step) {
             results.add(new Results(Precision.round(i, xPrecision), sigmaTotal.get(ind).calculate(i), nxTotal.get(ind).calculate(i), uxTotal.get(ind).calculate(i)));
         }
         return results;

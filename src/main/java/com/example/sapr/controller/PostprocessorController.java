@@ -1,14 +1,16 @@
 package com.example.sapr.controller;
 
-import com.example.sapr.service.Processor;
-import com.example.sapr.service.Results;
-import com.example.sapr.service.Storage;
+import com.example.sapr.service.*;
+import com.example.sapr.service.impl.GraphCreatorImpl;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.BufferedWriter;
@@ -28,12 +30,11 @@ public class PostprocessorController implements Initializable {
     @FXML
     private TableColumn<Results, Double> xValue, Nx, Ux, sigmaX;
     @FXML
-    private ComboBox<Integer> precisions;
-    @FXML
     private TextField samplingStep, x, barIndexes;
     private final FileChooser fileChooser = new FileChooser();
-    Processor processor = Processor.INSTANCE;
-    Storage storage = Storage.INSTANCE;
+    private final Processor processor = Processor.INSTANCE;
+    private final Storage storage = Storage.INSTANCE;
+    private final GraphCreator graphCreator = new GraphCreatorImpl();
 
     private double tryParseDouble(String number) {
         return Double.parseDouble(number);
@@ -107,23 +108,23 @@ public class PostprocessorController implements Initializable {
         save(calculatorResults, ((Button) event.getSource()).getScene().getWindow());
     }
 
-    //    public void drawGraph(String shiftStep, int barIndex, int precision) {
-//        try {
-//            double parsedStep = tryParseDouble(shiftStep);
-//            if (parsedStep == 0.0)  MainService.showErrorDialog("Sampling step value can't be null");
-//            int stepPrecision = getNumberPrecision(shiftStep);
-//            double barLength = storage.getConstructor().getBars().get(barIndex - 1).getLength();
-//            Group group = GraphCreator.create(calculator, barIndex - 1, precision, parsedStep, barLength, stepPrecision);
-//            Scene scene = new Scene(group);
-//            Stage stage = new Stage();
-//            stage.setScene(scene);
-//            stage.setTitle("Graph");
-//            stage.show();
-//        } catch (Exception e) {
-//            new Alert(Alert.AlertType.ERROR,
-//                    "Internal Application Error. Try again or contact to me.", ButtonType.OK).show();
-//        }
-//    }
+    public void drawGraph() {
+        try {
+            int barIndex = (int) tryParseDouble(barIndexes.getText());
+            double step = tryParseDouble(samplingStep.getText());
+            int stepPrecision = getNumberPrecision(samplingStep.getText());
+            double barLength = storage.getConstructor().getBars().get(barIndex - 1).getLength();
+            Group group = graphCreator.create(storage.getConstructor(), barIndex - 1, step, barLength, stepPrecision);
+            Scene scene = new Scene(group);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Graph");
+            stage.show();
+        } catch (Exception e) {
+            showErrorDialog("Ошибка");
+        }
+    }
+
     private int getNumberPrecision(String number) {
         String[] dotSplit = number.split("\\.");
         if (dotSplit.length == 1) {
