@@ -8,9 +8,11 @@ import com.example.sapr.service.Storage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
@@ -59,7 +61,7 @@ public class PreprocessorController implements Initializable {
 
     @FXML
     private Button delNodeLoad;
-    Storage storage=Storage.INSTANCE;
+    Storage storage = Storage.INSTANCE;
 
     @FXML
     private CheckBox leftSupport;
@@ -93,9 +95,6 @@ public class PreprocessorController implements Initializable {
     private void process() {
         service.process(getConstruction());
     }
-
-
-
 
     private Constructor construction;
 

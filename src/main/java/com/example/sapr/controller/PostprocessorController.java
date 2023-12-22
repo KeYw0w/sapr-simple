@@ -1,6 +1,8 @@
 package com.example.sapr.controller;
 
 import com.example.sapr.payload.Bar;
+import com.example.sapr.payload.Constructor;
+import com.example.sapr.payload.PostProcessorTableCell;
 import com.example.sapr.service.*;
 import com.example.sapr.service.impl.DiagramCreatorImpl;
 import com.example.sapr.service.impl.GraphCreatorImpl;
@@ -53,6 +55,11 @@ public class PostprocessorController implements Initializable {
 
     private void initColumns() {
         setCellValuesFactory();
+        Constructor constructor = storage.getConstructor();
+        double[] array = constructor.getBars().stream()
+                .mapToDouble(Bar::getPermisVolt)
+                .toArray();
+        sigmaX.setCellFactory(a -> new PostProcessorTableCell<>(array, () -> (int) tryParseDouble(barIndexes.getText()) - 1));
     }
 
     private void setCellValuesFactory() {
